@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Node extras data
+ */
+/**
+ * Implements hook_node_load().
+ */
+function zmdata_node_load($nodes, $types) {
+  foreach ($nodes as $key => $node) {
+    $nodes[$key]->zmdata = unserialize($nodes[$key]->zmdata);
+  }
+}

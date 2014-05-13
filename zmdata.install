@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * zmdata.install
+ *
+ * Install, update and uninstall functions for the zmnode module.
+ */
+
+/**
+ * Implements hook_schema_alter().
+ */
+function zmdata_schema_alter(&$schema) {
+  // Add field to existing schema.
+  /*
+   *$schema['users']['fields']['timezone_id'] = array(
+   *  'type' => 'int',
+   *  'not null' => TRUE,
+   *  'default' => 0,
+   *  'description' => 'Per-user timezone configuration.',
+   *);
+   */
+  $schema['node']['fields']['zmdata'] = array(
+    'type'        => 'blob',
+    'not null'    => FALSE,
+    'size'        => 'big',
+    'serialize'   => TRUE,
+    'default'     => NULL,
+    'initial'     => NULL,
+    'description' => 'A serialized array of name value pairs that are related to the node.',
+  );
+
+  $schema['node_revision']['fields']['zmdata'] = array(
+    'type'        => 'blob',
+    'not null'    => FALSE,
+    'size'        => 'big',
+    'serialize'   => TRUE,
+    'default'     => NULL,
+    'initial'     => NULL,
+    'description' => 'A serialized array of name value pairs that are related to the node.',
+  );
+
+}
+
+/**
+ * Implements hook_install().
+ */
+function zmdata_install() {
+  $schema = drupal_get_schema('node');
+  db_add_field('node', 'zmdata', $schema['fields']['zmdata']);
+  db_add_field('node_revision', 'zmdata', $schema['fields']['zmdata']);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function zmdata_uninstall() {
+  if (db_field_exists('node', 'zmdata')) {
+     db_drop_field('node', 'zmdata');
+   }
+   if (db_field_exists('node_revision', 'zmdata')) {
+     db_drop_field('node_revision', 'zmdata');
+   }
+}
+
