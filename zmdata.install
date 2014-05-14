@@ -11,35 +11,18 @@
  * Implements hook_schema_alter().
  */
 function zmdata_schema_alter(&$schema) {
-  // Add field to existing schema.
-  /*
-   *$schema['users']['fields']['timezone_id'] = array(
-   *  'type' => 'int',
-   *  'not null' => TRUE,
-   *  'default' => 0,
-   *  'description' => 'Per-user timezone configuration.',
-   *);
-   */
-  $schema['node']['fields']['zmdata'] = array(
+  $field = array(
     'type'        => 'blob',
     'not null'    => FALSE,
     'size'        => 'big',
     'serialize'   => TRUE,
     'default'     => NULL,
     'initial'     => NULL,
-    'description' => 'A serialized array of name value pairs that are related to the node.',
+    'description' => 'A serialized array of name value pairs thatare related to the node.',
   );
 
-  $schema['node_revision']['fields']['zmdata'] = array(
-    'type'        => 'blob',
-    'not null'    => FALSE,
-    'size'        => 'big',
-    'serialize'   => TRUE,
-    'default'     => NULL,
-    'initial'     => NULL,
-    'description' => 'A serialized array of name value pairs that are related to the node.',
-  );
-
+  $schema['node']['fields']['zmdata'] = $field;
+  $schema['node_revision']['fields']['zmdata'] = $field;
 }
 
 /**
