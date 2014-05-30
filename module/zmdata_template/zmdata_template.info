@@ -1,0 +1,5 @@
+name = Node Template
+description = Node page template with zmdata.
+core = 7.x
+
+dependencies[] = zmdata

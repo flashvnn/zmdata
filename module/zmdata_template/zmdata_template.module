@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Node page template with zmdata.
+ */
+
+require_once 'zmdata_template.inc';
+
+/**
+ * Implementation of hook_form_node_form_alter().
+ */
+function zmdata_template_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $node = $form['#node'];
+  $templates = zmdata_template_get_templates();
+  $zmdata_template_default = isset($node->zmdata['zmdata_template']) ? $node->zmdata['zmdata_template'] : "";
+
+  $form['zmdata_template'] = array(
+    '#type'         => 'fieldset',
+    '#title'        => t('Page Template'),
+    /*    '#access' => user_access("allow users to pick $bundle templates"),*/
+    '#collapsible'  => TRUE,
+    '#collapsed'    => TRUE,
+    '#group'        => 'additional_settings',
+    '#weight'       => -10,
+  );
+
+  // Add a select box inside the template picker fieldset.
+  $form['zmdata_template']['zmdata_template'] = array(
+    '#type'          => 'select',
+    '#title'         => t('Template'),
+    '#description'   => t('Select a page template to use for this content.'),
+    '#options'       => $templates,
+    '#empty_option'  => t('Default'),
+    '#default_value' => $zmdata_template_default,
+  );
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function zmdata_template_node_presave($node) {
+  if (isset($node->zmdata_template)) {
+    $node->zmdata['zmdata_template'] = $node->zmdata_template;
+  }
+}
+
+/**
+ * Implementation of hook_preprocess_page().
+ */
+function zmdata_template_preprocess_page(&$variables) {
+  if (arg(0)=='node' && arg(2) == 'edit') {
+    return;
+  }
+
+  if (isset($variables['node'])) {
+    if (isset($variables['node']->zmdata['zmdata_template'])) {
+      $variables['theme_hook_suggestions'][] = $variables['node']->zmdata['zmdata_template'];
+    }
+  }
+
+}
